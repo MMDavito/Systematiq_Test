@@ -8,8 +8,8 @@ EOF
 exit
 }
 createSchema(){
-sudo su demo <<EOF
-psql -c 'CREATE SCHEMA IF NOT EXISTS demo;'
+sudo su postgres <<EOF
+psql -c 'CREATE SCHEMA IF NOT EXISTS demo_schema AUTHORIZATION postgres;'
 EOF
 exit
 }

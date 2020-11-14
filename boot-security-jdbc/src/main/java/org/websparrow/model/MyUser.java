@@ -4,7 +4,6 @@ public class MyUser {
 
 	private String userName;
 	private String password;
-	private String roles;
 
 	// Generate Getters and Setters...
 
@@ -24,12 +23,5 @@ public class MyUser {
 		this.password = password;
 	}
 
-	public String getRoles() {
-		return roles;
-	}
-
-	public void setRoles(String roles) {
-		this.roles = roles;
-	}
 
 }

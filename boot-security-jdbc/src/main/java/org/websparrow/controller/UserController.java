@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpMessage;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -25,27 +28,22 @@ public class UserController {
 	private BCryptPasswordEncoder passwordEncoder;
 
 	@PostMapping(value = "/register-user")
-	public String regiter(@RequestBody MyUser myUser) {
+	public HttpStatus regiter(@RequestBody MyUser myUser) {
 		List<GrantedAuthority> authorities = new ArrayList<>();
-		authorities.add(new SimpleGrantedAuthority(myUser.getRoles()));
+		authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
 		String encodededPassword = passwordEncoder.encode(myUser.getPassword());
 		User user = new User(myUser.getUserName(), encodededPassword, authorities);
 		jdbcUserDetailsManager.createUser(user);
-		return "User created :)";
-	}
+		return HttpStatus.CREATED;
 
-	@GetMapping(value = "/admin")
-	public String admin() {
-		return "<h3>Welcome Admin :)</h3>";
 	}
-
-	@GetMapping(value = "/user")
-	public String user() {
-		return "<h3>Hello User :)</h3>";
+	@GetMapping(value = "/is_authenticated")
+	public HttpStatus authenticated() {
+		return HttpStatus.NO_CONTENT;
 	}
 
 	@GetMapping(value = "/")
-	public String welcome() {
-		return "<h3>Welcome :)</h3>";
+	public HttpStatus welcome() {
+		return HttpStatus.NO_CONTENT;
 	}
 }

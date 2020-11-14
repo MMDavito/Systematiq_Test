@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ServingWebContentApplication<java_demo>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.lama_development.java_demo.ServingWebContentApplication",
+            "projectName": "java_demo",
+            "args": ""
+        }
+    ]
+}

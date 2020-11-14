@@ -6,53 +6,76 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.http.HttpHeaders;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.lama_development.java_demo.repository.*;
 import com.lama_development.java_demo.service.*;
 import com.lama_development.java_demo.dto.*;
 
-@RestController
+@Controller //will be state/session
 public class UserController {
-    @PostMapping("/dologin")
-    public ResponseEntity<String> userLogin(HttpSession session, @RequestHeader("Authorization") String encodedAuth,
-            HttpServletResponse response) {
+    private static final String userSessionKey = "user";
 
+    @PostMapping("/dologin")
+    // public ResponseEntity<String> userLogin(HttpSession session,
+    // @RequestHeader("Authorization") String encodedAuth, HttpServletResponse
+    // response) {
+    public ResponseEntity<String> userLogin(HttpServletRequest request, HttpServletResponse response,
+            @RequestHeader("Authorization") String encodedAuth) {
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                System.out.println("COOOKIE: " + cookie);
+            }
+        }
         System.out.println("FUCK YOU");
         System.out.println(encodedAuth);
-
         User user = getCredentials(encodedAuth);
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            System.out.println("SESSION IS NULL: " + session);
+        } else {
+            System.out.println("SESSION IS not NULL: " + session);
+        }
+
         if (user == null) {
             return ResponseEntity.badRequest().header("Bad request no credentials").build();
-
         }
-        Cookie cookie = new Cookie("platform", "mobile");
-
-        if (user.userName == "DAVID") {
-            session.setAttribute("username", user.firstName);
-
-            // expires in 7 days
-            cookie.setMaxAge(7 * 24 * 60 * 60);
-
-            // optional properties
-            cookie.setSecure(true);
-            cookie.setHttpOnly(true);
-            cookie.setPath("/");
-
-            // add cookie to response
-            response.addCookie(cookie);
-
-            // TODO: add your login logic here
-            String jwtToken = "NOT_AVAILABLE";
-        } else {
-            session.setAttribute("Fail", "Failed to login");
+        if (session != null) {
+            System.out.println("SESSION NOT NULL: " + session);
         }
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
+        session = request.getSession(true);
+        session.setMaxInactiveInterval(15*60);
+        session.setAttribute("user", user.userName);
+        System.out.println("IS SESSION NULL?: " + request.getSession(false));
+        /*
+         * Cookie cookie = new Cookie("platform", "mobile");
+         * 
+         * if (user.userName == "DAVID") { session.setAttribute("username",
+         * user.firstName);
+         * 
+         * // expires in 7 days cookie.setMaxAge(7 * 24 * 60 * 60);
+         * 
+         * // optional properties cookie.setSecure(true); cookie.setHttpOnly(true);
+         * cookie.setPath("/");
+         * 
+         * // add cookie to response response.addCookie(cookie);
+         * 
+         * // TODO: add your login logic here String jwtToken = "NOT_AVAILABLE"; } else
+         * { session.setAttribute("Fail", "Failed to login"); }
+         */
+        // return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE,
+        // cookie.toString()).build();
+        return ResponseEntity.ok("BKAKAK");
 
     }
 

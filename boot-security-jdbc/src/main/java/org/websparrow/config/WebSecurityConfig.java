@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -39,14 +40,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable()
-		.authorizeRequests().antMatchers("/is_authenticated").authenticated()
+		.authorizeRequests().antMatchers("/is_authenticated","/login").authenticated()
 		.antMatchers("/", "/register-user").permitAll()
-		.and().formLogin()
+		.and().httpBasic()
+		//.and().formLogin()//This is good if you don't want browsers to make login out a painfull-process
 		.and()
 		.logout()
 		.logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.NO_CONTENT))
 		.deleteCookies("remove")	
-		.invalidateHttpSession(true).logoutUrl("/logout").logoutSuccessUrl("/").permitAll();
+		.invalidateHttpSession(true).logoutUrl("/logout").permitAll();
 	}
 
 	@Bean

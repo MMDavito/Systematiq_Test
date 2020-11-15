@@ -14,7 +14,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.websparrow.model.MyUser;
 
@@ -28,22 +30,34 @@ public class UserController {
 	private BCryptPasswordEncoder passwordEncoder;
 
 	@PostMapping(value = "/register-user")
-	public HttpStatus regiter(@RequestBody MyUser myUser) {
+	@ResponseBody
+	public ResponseEntity regiter(@RequestBody MyUser myUser) {
 		List<GrantedAuthority> authorities = new ArrayList<>();
-		authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 		String encodededPassword = passwordEncoder.encode(myUser.getPassword());
 		User user = new User(myUser.getUserName(), encodededPassword, authorities);
 		jdbcUserDetailsManager.createUser(user);
-		return HttpStatus.CREATED;
+		return new ResponseEntity(HttpStatus.CREATED);
 
 	}
 	@GetMapping(value = "/is_authenticated")
-	public HttpStatus authenticated() {
-		return HttpStatus.NO_CONTENT;
-	}
+	@ResponseBody
+	public ResponseEntity authenticated() {
+		return new ResponseEntity(HttpStatus.NO_CONTENT);
+		}
 
 	@GetMapping(value = "/")
 	public HttpStatus welcome() {
 		return HttpStatus.NO_CONTENT;
 	}
+	@PutMapping(value = "/logout")
+	public HttpStatus logout() {
+		return HttpStatus.NO_CONTENT;
+	}
+	@PostMapping(value = "/login")
+	@ResponseBody
+	public ResponseEntity loginPost() {
+		return new ResponseEntity(HttpStatus.OK);
+	}
+
 }

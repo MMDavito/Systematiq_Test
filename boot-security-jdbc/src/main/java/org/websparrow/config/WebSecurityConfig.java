@@ -33,10 +33,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(passwordEncoder());
 	}
 
-	private AuthenticationEntryPoint getRestAuthenticationEntryPoint() {
-		return new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED);
-	}
-
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable()

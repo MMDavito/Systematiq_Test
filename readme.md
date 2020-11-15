@@ -10,7 +10,7 @@ The use of two slightly different solutions is mostly to confuse people and show
 ------------------------------------------
 <h3>Installation and execution/"Test":</h3>
 
-1.  Navigate into the Direcotry of choice and create DataBase using the command "bash create_db.sh"
+1.  Navigate into the Directory of choice and create DataBase using the command "bash create_db.sh"
 2.  Start the server via "bash start_server.sh"
 3.  'Test' the server via "bash test_server.sh"
    

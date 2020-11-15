@@ -13,5 +13,5 @@ echo "Hello World"
 #createDB
 if [[ $(createDB 2>&1) =~ "ERROR:  database \"demo_single\" already exists" ]]
 then
-    echo "ERROR:  database \"demo\" already exists"
+    echo "ERROR:  database \"demo_single\" already exists"
 fi
